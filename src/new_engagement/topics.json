@@ -1,0 +1,22 @@
+{
+    "topics": [
+        {"topic": "How to brighten up your code with rainbow brackets", "additional_context": false},
+        {"topic": "Why do programmers prefer dark mode", "additional_context": true},
+        {"topic": "Exploring the world of tech-related animal GIFs", "additional_context": false},
+        {"topic": "Why sharing memes can foster a positive team culture", "additional_context": true},
+        {"topic": "The joy of discovering Easter eggs in software", "additional_context": true},
+        {"topic": "How to turn your code into a work of art", "additional_context": false},
+        {"topic": "The role of rubber ducks in problem-solving", "additional_context": true},
+        {"topic": "Why coffee is a developer's best friend", "additional_context": true},
+        {"topic": "The impact of cute pet videos on coding productivity", "additional_context": true},
+        {"topic": "Coding tips for new blockchain developers disguised as jokes", "additional_context": false},
+        {"topic": "How wholesome online communities can support your coding journey", "additional_context": true},
+        {"topic": "Challenges faced by blockchain developers, as told by memes", "additional_context": false},
+        {"topic": "Inspirational stories of developers finding the funniest bugs", "additional_context": true},
+        {"topic": "The importance of taking a laugh break in the tech industry", "additional_context": false},
+        {"topic": "Ways to turn coding challenges into fun games", "additional_context": false},
+        {"topic": "Celebrating the hilarious side of developer life", "additional_context": true},
+        {"topic": "How to maintain mental health while working in a fast-paced tech environment, with a touch of humor", "additional_context": false},
+        {"topic": "Benefits of creating a cozy workspace for remote work", "additional_context": false}
+    ]
+}

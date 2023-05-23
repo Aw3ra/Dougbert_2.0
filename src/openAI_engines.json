@@ -1,0 +1,14 @@
+[
+    {
+        "engines":
+        {
+            "davinci": "text-davinci-003",
+            "chatgpt": "gpt-3.5-turbo-0301",
+            "gpt4": "gpt-3.5-turbo-0301",
+            "curie": "text-curie-001",
+            "babbage": "text-babbage-001",
+            "ada": "text-ada-001",
+            "default": "gpt-3.5-turbo-0301"
+        }
+    }
+]

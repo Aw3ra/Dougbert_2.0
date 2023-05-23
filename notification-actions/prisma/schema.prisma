@@ -1,0 +1,85 @@
+generator client2 {
+  provider             = "prisma-client-py"
+  recursive_type_depth = "-1"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model notification {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  tweetId         String    @unique
+  content         String
+  createdAt       DateTime
+  authorUsername  String
+  authorId        String
+  engagement      Float
+  mediaUrls       String[]
+  actioned        Boolean   @default(false)
+}
+
+model user {
+  id                    String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id               String @unique
+  user_name             String
+  display_name          String
+  consumer_key          String
+  consumer_secret       String
+  access_token          String
+  access_token_secret   String
+  personality           String
+}
+
+model friends {
+  id                      String @id @default(auto()) @map("_id") @db.ObjectId
+  twitter_id              String @unique
+  username                String
+  display_name            String
+  nicknames               String[]
+  friendship_level        Int
+  conversations           String[]
+  following               Boolean
+  friendship_created_at   DateTime
+  profile_image_url       String
+  profile_banner_url      String
+  profile_description     String
+  followers               Int
+  verified                Boolean
+}
+
+model generated_tweets {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  generated_text String
+  original_text  String
+  personality    String
+  tone           String
+  topic          String
+  user           String
+  approved       Boolean
+  used           Boolean
+}
+
+model replied_to_tweets {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  tweet_id       String @unique
+  original_tweet String
+  reply          String
+  user           String
+  author         String
+  topic          String
+}
+
+model scraped_tweets {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  tweet_id       String @unique
+  tweet_text     String
+  author         String
+  author_id      String
+  topic          String
+  engagement     Int
+  created_at     DateTime
+}
+
+

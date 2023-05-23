@@ -1,0 +1,164 @@
+[
+    {
+        "link": "https://docs.helius.xyz/",
+        "title": "",
+        "type": "content",
+        "content": "What is Helius?\nWe founded Helius to make it easier to build and succeed on Solana. Solana's vast scale presents many challenges such as costly RPC nodes, unreliable data streaming, and cryptic on-chain data.\nWe believe developing on Solana should be simple and enjoyable. That's why we've created a suite of intuitive tools to enable you to quickly and easily ship on Solana.\nWith Helius, you get access to a wide range of enhanced APIs, webhooks, RPC nodes and cutting-edge data infrastructure (Geyser, Datalakes)."
+    },
+    {
+        "link": "https://docs.helius.xyz/reference/guides-and-tutorials",
+        "title": "guides-and-tutorials",
+        "type": "content",
+        "content": "Helius offers a variety of tools and infrastracture to allow developers to build better, faster, and cheaper on Solana. For reference or inspiration on how to use some of these tools, we've curated a list of guides you can quickly turn to.\n\u26a1Realtime Transaction Streaming\ud83c\udf92Portfolio Display\ud83d\udcd6How To Mint SPL Tokens\ud83d\udcf8How to Take Holder Snapshots"
+    },
+    {
+        "link": "https://docs.helius.xyz/reference/nft-collections-on-solana",
+        "title": "nft-collections-on-solana",
+        "type": "content",
+        "content": "BackgroundNFT collections on Solana are difficult to work with because there is no consistent mechanism to reference an NFT collection. NFT marketplaces reference collections by \"mintlists\", which is the list of mint accounts that make up the collection. The mintlist is determined by the NFT project.\nThere are two common ways of referencing NFT collections on Solana if you do not have the full mintlist:1.\nFirst verified creator: The first verified creator in the NFT metadata will be the address of the Candy Machine that minted the NFT. This is the most common way to reference an NFT collection in Solana.\n2.\nVerified collection address: This address references an NFT that represents the NFT collection. This is a newer feature added by Metaplex and is not supported by all NFTs. For more information please read here.\nTo make matters more complicated, some NFT projects opted to use multiple candy machines to mint their collection, meaning that not all NFTs in the collection have the same first verified creator. Bohemia is an example.\n\u200bCollections with HeliusHelius' approach to querying NFT collections aims to provide the developer with complete flexibility and control. We opted to not create custom identifiers for each collection in favour of simplicity and staying consistent with the on-chain data.  Helius supports querying for collections by both first verified creator and verified collection address. You can query with an array of first verified creator's to reference a collection was minted by multiple candy machines.\n\u200bFinding The Right Collection AddressThere are two main ways to find the collection address for a given NFT on Solana.\nCalling Helius' /NFTs endpointThe easiest way to automatically determine which collection an NFT belongs to is by parsing the response from our /NFTs endpoint for a given NFT mint address:Broken linkLooking at an explorerTo determine the collection address of an NFT manually, you can input its mint address onto a Solana explorer. Here is a screenshot of an example, with collection addresses underlined in red.\n\u200bCollection APIsThe following APIs support NFT collections:\u200bNFT Events (Historical Querying) \u2013 Query NFT events for a given collection.\n\u200bBroken link \u2013\u00a0Provides collection details for a batch of NFTs.\n\u200bNFT Collection Mintlists \u2013 Get the list of NFTs for a given collection.\n\u200bBroken link \u2013\u00a0Query active listings for a given collection.\n\u200bExampleQuery for all the mints in the ABC collection.\nconst axios = require('axios')\u200bconst url = `https://api.\nhelius.\nxyz/v1/mintlist?\napi-key=<api_key>`\u200bconst getMintlist = async () => { const { data } = await axios.\npost(url, { \"query\": { // ABC collection \"firstVerifiedCreators\": [\"GVkb5GuwGKydA4xXLT9PNpx63h7bhFNrDLQSxi6j5NuF\"] }, \"options\": { \"limit\": 10000 } });    console.\nlog(\"Mintlist: \", data.\nresult);};getMintlist();\u200b"
+    },
+    {
+        "link": "https://docs.helius.xyz/reference/sdks",
+        "title": "sdks",
+        "type": "content",
+        "content": "Official Helius SDKWe've created an official Typescript/Javascript SDK to make your life easier."
+    },
+    {
+        "link": "https://docs.helius.xyz/reference/sdks",
+        "title": "sdks",
+        "type": "content",
+        "content": "Get started with the most powerful Solana SDK here:GitHub - helius-labs/helius-sdkGitHubUnofficial Community SDKsOur amazing community members have also created their own SDKs to interact with our REST APIs. Please note these are not officially maintained by our team.\n\u200bPython SDK\u200b\u200bPHP SDK\u200b\u200bKotlin SDK\u200bStart Building\u26a1Quick Start"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-apis/balances-api",
+        "title": "balances-api",
+        "type": "content",
+        "content": "v0/addresses/:address/balancesReturns the native Solana balance (in lamports) and all token balances for a given address.\nUse https://api-devnet.\nhelius.\nxyz/v0/addresses/{address}/balances for devnet balancesgethttps://api.\nhelius.\nxyz/v0/addresses/{address}/balancesReturns the native balance and token balances for a given address.\nExample Use CasesHuman-readable domain names are great for social applications and tracking purposes. Some example use cases:Portfolio trackingTax reportingBlockchain explorersWalletsCode SamplesgetNames.\njsconst axios = require('axios')\u200bconst url = \"https://api.\nhelius.\nxyz/v0/addresses/<address>/balances?\napi-key=<your-key>\"const getBalances = async () => { const { data } = await axios.\nget(url)  console.\nlog(\"balances: \", data)}getBalances()"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-apis/enhanced-transactions-api",
+        "title": "enhanced-transactions-api",
+        "type": "content",
+        "content": "Obtain enriched historical context about any Solana address.\n\u200bParse A Single TransactionParse Transaction(s)Get Enriched Transaction HistoryParsed Transaction History"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-apis/nft-api",
+        "title": "nft-api",
+        "type": "content",
+        "content": "NFT EventsWe've carefully parsed and indexed every single NFT-related transaction on Solana since genesis \u2014 we're calling these NFT Events.\nNFT events are transactions that represent NFT-related activities, such as listings, sales, bids, updated listings, mints, accepted offers, and more."
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-apis/nft-api",
+        "title": "nft-api",
+        "type": "content",
+        "content": "You can query by any type of address (token address, user address, marketplace address etc), transaction type, collection, and time!\nNote: our first release will not include NFT AMMs.\nNFT Events (Historical Querying)NFT Collection MintlistsA \"mintlist\" is a list of the mint accounts of all the NFTs in a given NFT collection. In other words, it's the list of all the NFTs for a given collection. We've indexed these mintlists so you can fetch them in the most performant way possible.\nNFT Collection Mintlists\u200bNFT MetadataInstead of making multiple RPC calls and decoding account data, you can bulk-fetch metadata for any Solana NFT in a highly-performant manner.\n\ud83d\udcb9Token Metadata APIExample Use Cases\u2753Reference"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-apis/token-metadata-api",
+        "title": "token-metadata-api",
+        "type": "content",
+        "content": "Returns metadata for a list of given token mint addresses. Common mints are internally cached for optimized performance.\nv0/token-metadataYou can pass up to 100 mint accounts.\nUse https://api-devnet.\nhelius.\nxyz/v0/token-metadata for devnet metadataposthttps://api.\nhelius.\nxyz/v0/token-metadataReturns all metadata associated with an account, including data from the old token list.\nExample Use CasesArguably the most interesting parts of the NFT such as image URL and attributes/traits are stored on the metadata. The NFT metadata endpoint can be used to either bulk fetch multiple NFTs' metadata or a single one. Some example use cases:NFT Photo GalleryRarity calculator/analysisDynamic/evolving NFTsCode SamplesgetMetadata.\njsconst axios = require('axios')\u200bconst url = \"https://api.\nhelius.\nxyz/v0/token-metadata?\napi-key=<your-key>\"const nftAddresses = [ \"BAAzgRGWY2v5AJBNZNFd2abiRXAUo56UxywKEjoCZW2\", \"8s6kQUZfdm7GSaThAcsmSs56wMinXrbk6SdNVngutrz5\"] // Monkesconst getMetadata = async () => { const { data } = await axios.\npost(url, { mintAccounts: nftAddresses, includeOffChain: true, disableCache: false, });    console.\nlog(\"metadata: \", data);};getMetadata();v0/tokens/metadata (deprecated)posthttps://api.\nhelius.\nxyz/v0/tokens/metadataReturns token metadata (whether NFT or Fungible) for a given token address.\nParametersQueryapi-key*stringThe api key.\nBodyExampleSchema{\u200b \"mintAccounts\": [\u200b \"string\"\u200b ]\u200b\u200b}Responses200: OKReturns the token metadata.\n400: Bad RequestInvalid request.\n401: UnauthorizedUnauthorized request.\n403: ForbiddenRequest was forbidden.\n404: Not FoundThe specified resource was not found.\n429: Too Many RequestsExceeded rate limit.\n500: Internal Server ErrorThe server encountered an unexpected condition that prevented it from fulfilling the request."
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-data-infrastucture/advanced-infrastructure",
+        "title": "advanced-infrastructure",
+        "type": "content",
+        "content": "While our RPCs, APIs, and webhooks will take care of the majority of development use cases on Solana \u2014\u00a0advanced users might benefit from dedicated geyser nodes for ultra-low latency data streaming, large datalakes for batch jobs, and custom indexing for their programs. Geyser Plugins and Geyser as a Service\ud83c\udf0aGeyser as a ServiceArchival Datalake with Full Historical Solana Data\ud83c\udfe6Archival DatalakeSolana Custom Indexing\ud83d\uddc2Solana Indexing"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-rpc-nodes/digital-asset-standard-api",
+        "title": "digital-asset-standard-api",
+        "type": "content",
+        "content": "The API is currently in beta. We recommend testing in Devnet before deploying your workload to Mainnet. Please refer to github for active issues and note that the system is under active development.\nOverviewThe Digital Asset Standard (DAS) API is an open-source specification and system that provides a unified interface for interacting with digital assets (tokens, NFTs, etc). The API supports both regular and compressed NFTs. Some methods (e.\ng. \"getAssetProof\") are exclusively for compressed assets.\nThe DAS API adheres to the OpenRPC specification and behaves as an extension to the regular Solana API. The endpoint is shared with our RPC endpoint:Devnet \u2013 https://rpc-devnet.\nhelius.\nxyzMainnet \u2013 https://rpc.\nhelius.\nxyzOpenRPC SpecificationThe RPC methods are documented via the OpenRPC specification. Digital Asset Standard (DAS) MethodsThe DAS endpoints allow users to query both regular and compressed NFTs. The getAsset and getAssetProof methods provide the Merkle tree data that is required when interacting with compressed NFTs (transfer, burn, etc).\nHere is a list of existing methods available using Helius:Get Asset Get an asset by its ID.\nGet AssetSearch AssetsSearch for assets by a variety of parameters.\nSearch AssetsGet Asset ProofGet a merkle proof for a compressed asset by its ID.\nGet Asset ProofGet Assets by OwnerGet a list of assets owned by an address.\nGet Assets by OwnerGet Assets by GroupGet a list of assets by a group key and value.\nGet Assets by GroupGet Assets by AuthorityGet a list of assets with a specific authority.\nGet Assets by AuthorityGet Assets by Creator Get a list of assets created by an address.\nGet Assets by Creator\u200b"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-rpc-nodes/helius-rpc-proxy-stop-your-keys-from-leaking",
+        "title": "helius-rpc-proxy-stop-your-keys-from-leaking",
+        "type": "content",
+        "content": "A common problem when working with RPCs or APIs on the client side is your API keys leaking. Malicious actors can run up your quota or rate limits if they get access to your keys. Helius does provide access controls for this (for example, you can lockdown your endpoints to only serve requests for certain IPs and Domains) \u2014 but using a proxy is the better solution.\nWe've setup a simple open-source RPC proxy that you can deploy with 1-click to Cloudflare, you can check it out below:GitHub - helius-labs/helius-rpc-proxy: This repo hosts a one-click-deploy Cloudflare worker that proxies RPC requests to Helius.\nGitHub"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-rpc-nodes/helius-rpcs",
+        "title": "helius-rpcs",
+        "type": "content",
+        "content": "What is the Solana RPC API?\nRPCs are how you communicate with blockchains. If you need to read data from the blockchain or write data to the blockchain, you do this by using an RPC node. \nHere is a brief explainer on how RPCs on Solana works for the curious reader:How Solana RPCs WorkWhat makes Helius RPCs Different?\nAt Helius, we are Solana natives. We've been here since the beginning \u2014 and unlike other RPC providers, we are exclusively focused on perfecting the Solana experience. We do not build for other chains and as a result have more resources and domain expertise to pour towards Solana RPCs.\nWe pride ourselves in having the most reliable RPC offering in the entire ecosystem. Consistent performance, consistent pricing, consistent uptime, never any surprises. If you do run into any issues, we provide best-in-class 24/7 support to help unblock you and keep you moving forward.\nHow to use the Helius RPC?\nSimply generate an API key at dev.\nhelius.\nxyz and supply it to our RPC endpoint:https://rpc.\nhelius.\nxyz/?\napi-key=<INSERT YOUR API KEY HERE>We also provide various controls to fine-tune your RPC access patterns (i.\ne.\n, only allow requests from certain IPs or domains). You can configure these in our dev portal.\ndev.\nhelius.\nxyzDevnet RPCYou can also hit our devnet with the following base URL:"
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-rpc-nodes/helius-rpcs",
+        "title": "helius-rpcs",
+        "type": "content",
+        "content": "https://rpc-devnet.\nhelius.\nxyz/?\napi-key=<your-key-here>RPC OptimizationsTo offer best-in-class performance, we perform various optimizations under-the-hood including indexing, caching, edge networks, and running exclusively on the most performant bare-metal machines on the market.\nDedicated NodesWe also provide dedicated and private RPC nodes at best-in-class rates. Please message us on Discord or Telegram to learn more.\nRPC Reference DocumentationFor a full list of available RPC methods  \u2014\u00a0please see the Solana JSON-RPC specification, here."
+    },
+    {
+        "link": "https://docs.helius.xyz/solana-rpc-nodes/nft-compression",
+        "title": "nft-compression",
+        "type": "content",
+        "content": "OverviewHelius enables developers to interact with compressed NFTs via the Digital Asset Standard (DAS) API, an open-source specification and indexer. The API documentation can be found at Digital Asset Standard API.\nWhat is NFT compression?\nCompressed NFTs cost roughly 1% of the usual price to mint.\nSolana NFT compression allows developers to mint large amounts of NFTs for a fraction of the cost. This is achieved by maintaining NFT state off-chain with indexing companies (e.\ng. Helius) instead of accounts. There is a validation mechanism that ensures off-chain and program interactions are legitimate and secure. TLDR \u2013 Compression eliminates the need for complete on-chain storage while still retaining the decentralization, security, and programmability of Solana.\nCompressed NFTs are stored in a Merkle tree on the Solana ledger and the off-chain indexers. The validity of the Merkle tree can be checked by looking at the \"root hash\" \u2013\u00a0derived by iteratively hashing together the contents of the entire tree. The root hash is stored on-chain. Modifications to a compressed NFT require a \"proof\" to ensure that the NFT cannot be maliciously modified. The data returned by an off-chain indexer can also be verified by comparing the root hash with what is stored on-chain. For a deeper dive into how this works, please read the Metaplex documentation.\nHow are compressed NFTs different?\nCompressed NFTs are not native Solana tokens. They do not have a token account, mint account, or metadata.\nOne account exists per Merkle tree and each tree can hold millions of NFTs.\nOne collection is able to use multiple Merkle trees (recommended for larger collections).\nA Merkle tree account can also hold multiple collections (not recommended).\nAn API call is required to read any information about a compressed NFT (e.\ng. attributes, collection information, etc). This would have affect on Solana dApps loading your assets, etc. All NFT modifications must happen through the Bubblegum program.\nA compressed NFT can be converted to a regular NFT (but not the other way around).\nFor practical reasons it is recommended to keep the tree size to 1 million or less. This is because the proof path will begin to exceed the Solana transaction account limit.\nWhat modifications are possible?\nAt the time of writing, the following methods are supported by Bubblegum:Mint - Mint compressed NFTTransfer - Transfer compressed NFTBurn - Burn compressed NFTDelegate, CancelDelegate - Delegate authority of an NFT to a different wallet/Cancel the redemption of an NFT (Put the NFT back into the Merkle tree)Redeem, CancelRedeem - Redeem an NFT (remove from tree and store in a voucher PDA)/* Cancel the redemption of an NFT (Put the NFT back into the Merkle tree).\nDecompress - Decompress an NFT into an uncompressed Metaplex NFT. This will cost the rent for the token-metadata and master edition accounts that will need to be created.\nVerifyCreator, SetAndVerifyCreator - Verify and un-verify a creator that exists in the NFT\u2019s creator array.\nVerifyCollection, SetAndVerifyCollection - Verify or un-verify an NFT as a member of a Metaplex Certified collection when the collection is already set in the Metadata. Or set a new collection in the metadata and verify the NFT as a member of the new collection.\nYou can find out more from the Bubblegum program docs here.\nHow does the indexer work?\nAs mentioned before, compression NFT information is not stored on in a traditional Solana account. Instead they have all of their metadata stored on a ledger and need help of indexing services to quickly fetch the metadata required. The DAS indexer listens to all Bubblegum transactions, parses them, and updates an off-chain database. For example, when a compressed NFT is minted the indexer will parse that transaction and extract all of the NFT info (name, collection, owner). If a tree was never seen before or it is missing an update, the indexer will fetch the tree's transaction history and reconstruct the state.\nThe indexer code can be found here.\nExamplesYou can get started with the following examples:\u200bHelius Compression Examples\u200b\u200bMetaplex Compression Examples\u200bFurther Reading\u200bMetaplex Compression Overview\u200b\u200bMetaplex Compression Documentation Hub\u200b\u200bSolana Account Compression Repo\u200b\u200b\u200b"
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/getting-started-with-webhooks",
+        "title": "getting-started-with-webhooks",
+        "type": "content",
+        "content": "Quick StartCurrently we offer both transactions webhooks (listening to transactions for a set of accounts) and account change webhooks (listen to account changes for a set of accounts).\nHelius lets you interact with webhooks in three ways.\nHelius UI (Recommended)If you'd rather not bother with code and want additional methods for viewing logs and sending test webhook events, the Helius UI is what you need. The UI can be accessed at dev.\nhelius.\nxyz.\nHelius REST APIIf you're not working with Typescript or Javascript, you'll need to interact with our webhooks through REST:\ud83d\udcd8Webhooks API referenceHelius SDKThe easiest (and most fun) way to interact with Helius webhooks is to use the official SDK:GitHub - helius-labs/helius-sdkGitHubThe SDK contains abstractions to enhance what webhooks have to offer, including the ability to create collection webhooks (i.\ne.\n, a webhook that tracks all the NFTs within an NFT collection)!\nExample UsesBotsWhen an NFT is listed on marketplace X, trigger an \"nft buy\" action.\nWhen a margin position is unhealthy, trigger a \"liquidation\" action.\nMonitoring & AlertsWhen a program emits a certain log, trigger PagerDuty integration.\nWhen a token account balance changes by more than X%, use Dialect to communicate a warning action.\nEvent-driven IndexingWhen any transaction occurs for a given program, send it directly to your database or backend.\nNotifications & Activity TrackingWhen a transfer occurs from wallet X to wallet Y \u2014 send a Slack notification or email.\nAnalytics & LogsWhen event X happens, send it to an ETL pipeline or persist it directly on Helius to view trends over time.\nWorkflow AutomationWhen event X happens, trigger any set of actions."
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/webhooks-api-reference",
+        "title": "webhooks-api-reference",
+        "type": "content",
+        "content": "For any questions or help regarding our Webhooks APIs, please ask us for help on our Discord!\nCreate WebhookCreate WebhookGet All WebhooksGet All WebhooksGet Specific WebhookGet WebhookEdit/Modify WebhookEdit WebhookDelete WebhookDelete Webhook"
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/what-are-webhooks",
+        "title": "what-are-webhooks",
+        "type": "content",
+        "content": "What are Webhooks?\nWebhooks let you listen to on-chain events and trigger actions when these events happen."
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/what-are-webhooks",
+        "title": "what-are-webhooks",
+        "type": "content",
+        "content": "Rather than continuously polling blocks, transactions, or accounts on the blockchain \u2014 our webhooks serve on-chain events to any URL that you provide as soon as they happen on-chain. No need to worry about setting up and maintaining expensive & performant infrastructure to keep up with the latest transactions happening on-chain \u2014 we provide you both programmatic API access and a front-end UI to create and manage your webhooks."
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/what-are-webhooks",
+        "title": "what-are-webhooks",
+        "type": "content",
+        "content": "Here's a quick video to demonstrate.\nNote: It may take up to 2 minutes for webhook changes to take effect!\nTypes of WebhooksWe currently have multiple types of webhooks, these are:Account change webhooks (trigger updates when an account's data changes)Enhanced transaction webhooks (trigger updates when a certain type of transaction happens, for example an NFT sale, for the addresses your're watching)Raw transaction webhooks (trigger updates when any transaction happens for the addresses you're watching)Discord webhooks (stream updates directly to a Discord channel)Automatic Event DetectionHelius webhooks aren't just standard webhooks \u2014 we also give developers the power to select from a number of pre-configured event types. These event types include NFT sales, NFT listings, DeFi swaps, DAO votes, NFT mints, balance changes, and much more. For a more comprehensive list of supported types, please check out Transaction Types."
+    },
+    {
+        "link": "https://docs.helius.xyz/webhooks/what-are-webhooks",
+        "title": "what-are-webhooks",
+        "type": "content",
+        "content": "Whereas before you had to build your own parsers and reverse engineer smart contracts on-chain to detect certain events, we do the hard work for you."
+    },
+    {
+        "link": "https://docs.helius.xyz/welcome/pricing-and-rate-limits",
+        "title": "pricing-and-rate-limits",
+        "type": "content",
+        "content": "Pricing ModelWe currently offer four self-serve subscription tiers (which can be found on our website) as well as a custom Enterprise tier tailor-made for your needs."
+    },
+    {
+        "link": "https://docs.helius.xyz/welcome/pricing-and-rate-limits",
+        "title": "pricing-and-rate-limits",
+        "type": "content",
+        "content": "After a bit of research, you'll find that we provide the most competitive pricing around and the most comprehensive set of features in the market.\n\u200bSee our pricing here.\nPricingA screenshot of Helius pricing for easy access.\nCrypto PaymentsWe now offer automatic crypto payments! Check out our quick demo video below (30 seconds).\n\u200b"
+    },
+    {
+        "link": "https://docs.helius.xyz/welcome/quick-start",
+        "title": "quick-start",
+        "type": "content",
+        "content": "What Does Helius Offer?\nWith Helius, you have all the tools you need to bring your ideas to life on Solana.\nOur offerings include:The most reliable RPCs on SolanaEnhanced Solana APIs (NFT APIs, transaction parsing)Fast, highly configurable Webhooks (account updates and transactions)Geyser-as-a-Service and Serverless GeyserScalable Archival Data StoresRPCsOur RPCs are powered by the most advanced hardware, ensuring that your app will perform at its best, at a competitive price. With our services, you can confidently build the highest performance apps without worrying about reliability. We pride ourselves in having the best reliability in the entire ecosystem and have an unrelenting focus on developer experience and support if you run into any issues.\nBenchmarking different RPCs.\n\u2600Helius RPCsWebhooksOur webhooks allow you to easily respond to on-chain events in real-time. With our built-in support for over 70 transaction types and low-latency event streaming, you can automate your app's interactions with the Solana blockchain without spending time on complex smart contract parsers. You can subscribe to different transaction types or account changes. The best part? You can input upto 100 thousand addresses into a single webhook.\n\u200bStream either transactions or account changes!\n\ud83d\udd78WebhooksEnhanced Solana APIsMaking sense of Solana data can be challenging, as it often appears as a series of long, obscure hashes without context. This can make it difficult for users to understand what they're looking at and hinders the adoption of crypto by mainstream audiences.\nHelius APIs make it easy to understand and use Solana data by providing enriched, descriptive context. Instead of opaque hashes, our APIs allow you to see the details of on-chain transactions, such as whether they are NFT listings, DEX swaps, DeFi loans, or DAO votes.\n\ud83d\udd16Solana APIsHigh Performance Packages (Indexing, Geyser, Archival Datalakes)We also offer on-demand indexing, low-latency & fault-tolerant Geyser-as-a-Service, as well as access to archival Solana datalakes. Many of the top teams on Solana use us for these services."
+    },
+    {
+        "link": "https://docs.helius.xyz/welcome/quick-start",
+        "title": "quick-start",
+        "type": "content",
+        "content": "Contact us on Discord to learn more.\nTutorials, Guides, and DemosDon't know where to start? Check out some of our sample applications and demos for inspiration and reference.\n\ud83d\ude80Guides and Tutorials"
+    },
+    {
+        "link": "https://docs.helius.xyz/welcome/what-is-helius",
+        "title": "what-is-helius",
+        "type": "content",
+        "content": "What is Helius?\nWe founded Helius to make it easier to build and succeed on Solana. Solana's vast scale presents many challenges such as costly RPC nodes, unreliable data streaming, and cryptic on-chain data.\nWe believe developing on Solana should be simple and enjoyable. That's why we've created a suite of intuitive tools to enable you to quickly and easily ship on Solana.\nWith Helius, you get access to a wide range of enhanced APIs, webhooks, RPC nodes and cutting-edge data infrastructure (Geyser, Datalakes)."
+    }
+]
