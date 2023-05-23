@@ -42,10 +42,9 @@ def get_tweet_conversation(tweet_id, key):
     user_name = response.json()['data']['tweet_result']['result']['core']['user_result']['result']['legacy']['screen_name']
     content = response.json()['data']['tweet_result']['result']['legacy']['full_text']
     conversation = [{'role': 'user', 'content': user_name + ': ' + content}]
-
     new_tweet_id = response.json()['data']['tweet_result']['result']['legacy'].get('in_reply_to_status_id_str', None)
     if new_tweet_id is not None:
-        time.sleep(60)
+        time.sleep(2)
         conversation += get_tweet_conversation(new_tweet_id, key) # Append the result of recursive call to conversation
     return conversation[::-1]
 

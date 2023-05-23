@@ -40,7 +40,7 @@ def post_new_tweet():
 
 
 def main():
-    # search_tweets()
+    search_tweets()
     respond_to_notification()
     post_new_tweet()
     schedule.every(notif_search_time).minutes.do(search_tweets)

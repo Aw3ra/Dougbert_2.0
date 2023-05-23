@@ -14,7 +14,8 @@ def perform_action(action, tweet_conversation, tweet_id = None):
     try:
         if action == 'B':
             # Create ai response first
-            tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
+            tweet_response = create_tweet_response.build_message(tweet_conversation)
+            print(tweet_response)
             twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
             print('Replied to tweet')
         elif action == 'C':
@@ -58,7 +59,6 @@ def respond_to_notification():
                 if tweet == None:
                     return
                 tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet.tweetId)
-                print(tweet_conversation)
                 if len(tweet_conversation) != 0:
                     actions = decide_command.decide_command(tweet_conversation)
                     print(actions)
@@ -70,6 +70,7 @@ def respond_to_notification():
                         print('Do nothing')
                 asyncio.run(update_actioned(tweet))
             except Exception as e:
+                print(f'Error in respond_to_notification: {e}')
                 raise e
             finally:
                 time.sleep(20)
