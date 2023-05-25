@@ -49,60 +49,64 @@ def split_text_by_punctuation(text, max_chars=280):
         print(e)
         return [text]
 
-def get_helius_links():
-    helius_links = []
-    r = requests.get('https://docs.helius.xyz/')
+def get_lancer_links():
+    solana_links = []
+    r = requests.get('https://www.lancer.so/')
     soup = BeautifulSoup(r.text, 'html.parser')
     # Find all 'a' tags within divs with class 'css-175oi2r'
-    links = soup.select('div.css-175oi2r a')
+    print(soup.text)
+    links = soup.findAll('a', class_='menu__link')
     for link in links:
         href = link.get('href')
         if href and href.startswith('/'):
-            helius_links.append(href)
+            solana_links.append(href)
     # Remove duplicates and sort
-    helius_links = sorted(list(set(helius_links)))
+    helius_links = sorted(list(set(solana_links)))
     return helius_links
 
 
 
-def get_helius_info(extension):
-    url = 'https://docs.helius.xyz' + extension
+def get_lancer_info(extension):
+    url = extension
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     # Get the div with the data-testid
-    contents = soup.find('div', {'data-testid': 'page.contentEditor'})
-    # Try to get the text
+    contents = soup.text
     try:
-        contents = re.sub('(?<=[.!?])(?=[^\s])','\n', contents.text)
-        contents = split_text_by_punctuation(contents, max_chars=1500)
+        # Remove all new lines
+        contents = re.sub('\n', '', contents)
+        contents = re.sub('(?<=[.!?])(?=[^\s])','\n', contents)
+        contents = split_text_by_punctuation(contents, max_chars=750)
         for text in contents:
             print(text)
             print()
     except Exception as e:
         print('Error: '+ str(e))
         contents = ''
+    print(contents)
     return contents
 
-links = get_helius_links()
+links = ['https://www.lancer.so/']
 
-# Create dictionaries in this formate: {'source': 'helius', 'title': 'title', 'description': 'description', 'link': 'link'}
 
-base_dict = {'source': 'helius', 'title': '', 'content': '', 'link': ''}
 final_json = []
 
 for link in links:
-    for content in get_helius_info(link):
-        base_dict = {}  # Create a new dictionary in each iteration
-        base_dict['link'] = 'https://docs.helius.xyz' + link
-        base_dict['title'] = link.split('/')[-1]
-        base_dict['type'] = 'content'
-        base_dict['content'] = content
+    for content in get_lancer_info(link):
+        base_dict = {
+            'link':     link, 
+            'title':    link.split('/')[-1], 
+            'content':  content, 
+            'type':     'content'
+            } 
         final_json.append(base_dict)
 
 
 
 # # Save the final_json to a json file
 import json
-with open('src/data_ingestion/helius/helius.json', 'w') as f:
+with open('src/data_ingestion/lancer/lancer-docs.json', 'w') as f:
     json.dump(final_json, f, indent=4)
+
+
 

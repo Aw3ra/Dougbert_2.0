@@ -48,5 +48,11 @@ def upload_data(file_name):
     # Upload data to Pinecone
     return upload_vectors(data)
 
+def delete_all_data(data):
+    data = retrieve_data_from_json(data)
+    for i in range(len(data)):
+        print(index.delete(ids=[str(i)], namespace=index_name))
+
 if __name__ == "__main__":
-    print(upload_data("src/data_ingestion/solana/solana-docs.json"))
+    # print(delete_all_data("src/data_ingestion/helius/helius.json"))
+    print(upload_data("src/data_ingestion/lancer/lancer-docs.json"))

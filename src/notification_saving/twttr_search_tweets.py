@@ -7,8 +7,9 @@ from datetime import datetime
 import asyncio
 import time
 
-dotenv.load_dotenv()
 session = os.getenv("DOUGBERT_SESSION")
+twitter_handle = str(os.getenv("TWITTER_HANDLE"))
+rapid_api_key = os.getenv("RAPID_API_KEY")
 
 conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
 prisma_client = Client()
@@ -17,7 +18,7 @@ def search_notifications(session, query):
     try:
         headers = {
             'twttr-session': session,
-            'X-RapidAPI-Key': "2665401a98mshb4ff8c9c9dc53efp1568abjsn0ce6e816b0c1",
+            'X-RapidAPI-Key': rapid_api_key,
             'X-RapidAPI-Host': "twttrapi.p.rapidapi.com"
         }
         conn.request("GET", f"/search-users?query={query}", headers=headers)
@@ -27,8 +28,6 @@ def search_notifications(session, query):
         tweets = data['globalObjects']['tweets']
         # dump it as a json
         notifications = []
-        with open('tweets.json', 'w') as f:
-            json.dump(tweets, f, indent = 4)
         for tweet in tweets:
             if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == 1610746366682361856:
                 continue
@@ -72,7 +71,7 @@ def get_notifications():
     max_retries = 5
     for i in range(max_retries):
         try:
-            asyncio.run(save_notifications(search_notifications(session, "@dougbertai")))
+            asyncio.run(save_notifications(search_notifications(session, twitter_handle)))
             break  # if the function runs successfully, break the loop
         except Exception as e:
             if i < max_retries - 1:  # i starts at 0, so we subtract 1

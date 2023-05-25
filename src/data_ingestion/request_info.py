@@ -33,7 +33,7 @@ def search_vectors(prompt):
     results = index.query(queries=[vector], top_k=5, include_metadata=True, namespace='solana-projects')
     top_result = results['results'][0]['matches'][0]  # Get the first match
     print(top_result['score'])
-    if top_result['score'] > 0.7:
+    if top_result['score'] > 0.8:
         return top_result
     else:
         return None
@@ -41,6 +41,7 @@ def search_vectors(prompt):
 # FUnction to return the system message if something is found, or a default message if nothing is found
 def return_system_message(query):
     query = query[0]['content']
+    print(query)
     result = search_vectors(query)
     if result is not None:
         system_message = {"role": "system", "content":
@@ -98,3 +99,4 @@ if __name__ == "__main__":
     print('Response: ', response)
     print("--------------------")
     print("--------------------")
+

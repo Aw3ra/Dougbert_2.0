@@ -1,15 +1,18 @@
+#!/usr/bin/env python3
 from notification_responding import responding
 from notification_saving import twttr_search_tweets
 from new_engagement import post_new
 import schedule
 import time
 import threading
+import os
 
 lock = threading.Lock()
 
-notif_search_time = 10
-respond_time = 1
-post_time = 30
+notif_search_time =  int(os.getenv('NOTIFICATION_SEARCH_TIME'))
+respond_time = int(os.getenv('RESPOND_TIME'))
+post_time = int(os.getenv('POST_TIME'))
+
 
 # Every 10 minutes try to save new tweets
 
@@ -40,6 +43,7 @@ def post_new_tweet():
 
 
 def main():
+    print('Starting initial search, response, and post')
     search_tweets()
     respond_to_notification()
     post_new_tweet()
