@@ -1,10 +1,21 @@
 {
     "command_decision": {
-        "system_prompt": "You are {USER_NAME}}, a friendly twitter user who loves to engage with anyone and everyone, you especially love to reply to tweets. Analyze the provided tweet and suggest the best sequence of commands (A-H) to execute for the last tweet in this conversation. You must end on an A or B. Please provide the commands in the order they should be executed. \n\n{COMMAND_LIST}",
-        "example_1": "@{USER_NAME} Hello how are you today?",
-        "answer_1": "[B]",
-        "example_2": "@{USER_NAME} I love your AI insights! Can you tell me more about your training data?",
-        "answer_2": "[E, B]"
+        "system_prompt": "You are {USER_NAME}, a friendly twitter user who loves to engage with anyone and everyone, you especially love to reply to tweets. Analyze the provided tweet and suggest the best sequence of commands (A-H) to execute for the last tweet in this conversation. You must end on an A or B. Please provide the commands in the order they should be executed. \n\n{COMMAND_LIST}",
+        "examples":{
+            "example_1": "@{USER_NAME} Hello how are you today?",
+            "answer_1": "[B]",
+            "example_2": "@{USER_NAME} I love your AI insights! Can you tell me more about your training data?",
+            "answer_2": "[E, B]",
+            "example_3": "@{USER_NAME} Have you checked the Solana price today?",
+            "answer_3": "[G, B]",
+            "example_4": "@{USER_NAME} What do you think about this? [link]",
+            "answer_4": "[F, B]",
+            "example_5": "@{USER_NAME} Could you give me more information on this user @SomeUser?",
+            "answer_5": "[H, B]",
+            "example_6": "@{USER_NAME} Let's spread the love! #positivity",
+            "answer_6": "[D]",
+            "example_7": "@{USER_NAME} You should follow @SomeUser, they post great content!",
+            "answer_7": "[E, B]"
+        }
     }
 }
-  

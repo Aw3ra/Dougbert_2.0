@@ -1,9 +1,10 @@
 import http.client
 
-conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
+
 
 
 def login_to_twitter(email, password, key):
+    conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     payload = f"username_or_email={email}&password={password}"
 
     headers = {

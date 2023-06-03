@@ -3,11 +3,12 @@ import json
 import time
 import requests
 
-conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
+
 
 tweet_id = '1659703890265387008'
 
 def get_tweet(tweet_id, key):
+    conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     headers = {
         'X-RapidAPI-Key': key,
         'X-RapidAPI-Host': "twttrapi.p.rapidapi.com"

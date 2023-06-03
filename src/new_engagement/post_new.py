@@ -4,18 +4,19 @@ import random
 import json
 import time
 
-max_retries = 5
+
 
 
 def post_tweet():
+    max_retries = 5
     for i in range(max_retries):
         try:
-            post_tweet_new()
+            print(post_tweet_new())
             break  # if the function runs successfully, break the loop
         except Exception as e:
             if i < max_retries - 1:  # i starts at 0, so we subtract 1
                 print('Error encountered while posting a new tweet: ', str(e))
-                print(f'Retrying after 5 seconds... (Attempt {i+2}/{max_retries})')  # i+2 because i starts at 0
+                print(f'Retrying after 5 seconds... (Attempt {i+2}/{max_retries})', flush=True)  # i+2 because i starts at 0
                 time.sleep(5)
             else:
                 print('Error encountered on the final attempt. No further retries will be made.')
@@ -34,8 +35,9 @@ def post_tweet_new():
             # This branch will be taken 5% of the time
             filtered_list = [topic for topic in topics if not topic['additional_context']]
             tweet = create_new_tweet.generate_tweet(filtered_list)
-            twttr_handler.decide_action('tweet', tweet=tweet)
+            print('Tweet: ', tweet)
             print('Posted new tweet')
+            print (twttr_handler.decide_action('tweet', tweet=tweet), flush=True)
         else:
             # This branch will be taken 95% of the time
             tweet_id = twttr_handler.decide_action('random-timeline')
@@ -44,7 +46,7 @@ def post_tweet_new():
             print('Tweet conversation: ', tweet_conversation)
             tweet = create_tweet_response.build_message(tweet_conversation)
             print('Tweet: ', tweet)
-            twttr_handler.decide_action('tweet', tweet=tweet, tweet_id=tweet_id)
+            print(twttr_handler.decide_action('tweet', tweet=tweet, tweet_id=tweet_id), flush=True)
             print('Replied to tweet')
     except Exception as e:
         raise e

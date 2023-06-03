@@ -2,9 +2,10 @@ import requests
 import json
 import time
 
-url = "https://twttrapi.p.rapidapi.com/create-tweet"
+
 
 def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
+    url = "https://twttrapi.p.rapidapi.com/create-tweet"
     try:
         tweets = []
         # If in_reply_to_status_id is not None, then the tweet is a reply to the tweet with the given ID.

@@ -1,27 +1,13 @@
 from openAI.functions import generate_text
 import os
 import json
-api_key = os.getenv("OPENAI_API_KEY")
-twitter_handle = str(os.getenv("TWITTER_HANDLE"))
+from dotenv import load_dotenv
 
 
-from general_functions import find_json
 
-prompts = find_json.find_json_file('command_generating_prompts.json')['command_decision']
-LIST_OF_COMMANDS = [
-"A: Do nothing",
-"B: Reply to last tweet"
-"C: Retweet last tweet",
-"D: Like last tweet",
-"E: Follow user",
-"F: Search the internet",
-"G: Check Solana price",
-"H: Lookup user profile",
-]
+# from general_functions import find_json
 
-command_string = ""
-for command in LIST_OF_COMMANDS:
-    command_string += command + "\n"
+
 
 # ---------------------------------------------------------------------------------#
 # Function to decide which command to run based on the tweet
@@ -31,16 +17,37 @@ for command in LIST_OF_COMMANDS:
 # Outputs:  the command to run
 # ---------------------------------------------------------------------------------#
 def decide_command(conversation):
-    # Get the last two messages
-    conversation = conversation[-1:]
+    load_dotenv()
+    api_key = os.getenv("OPENAI_API_KEY")
+    twitter_handle = str(os.getenv("TWITTER_HANDLE"))
+    prompts = json.load(open('src/commands/command_generating_prompts.json', 'r'))['command_decision']
+    # prompts = find_json.find_json_file('command_generating_prompts.json')['command_decision']
+    LIST_OF_COMMANDS = [
+    "A: Do nothing",
+    "B: Reply to last tweet"
+    "C: Retweet last tweet",
+    "D: Like last tweet",
+    "E: Follow user",
+    "F: Search the internet",
+    "G: Check Solana price",
+    "H: Lookup user profile",
+    "I: Send tip for bing funny and/or informative",
+    ]
+
+    command_string = ""
+    for command in LIST_OF_COMMANDS:
+        command_string += command + "\n"
+        # Get the last two messages
+        conversation = conversation[-1:]
     
     system_prompt = {"role": "system", "content": prompts["system_prompt"].replace("{COMMAND_LIST}", command_string).replace("{USER_NAME}", twitter_handle)}
-    examples = [
-        {"role": "user", "content": prompts["example_1"].replace("{USER_NAME}", twitter_handle)}, 
-        {"role": "assistant", "content": prompts["answer_1"]}, 
-        {"role": "user", "content": prompts["example_2"].replace("{USER_NAME}", twitter_handle)}, 
-        {"role": "assistant", "content": prompts["answer_2"]}
-        ]
+    examples = []
+    all_examples = prompts['examples']
+    for example in all_examples:
+        if example.startswith("example_"):
+            examples.append({"role": "user", "content": all_examples[example].replace("{USER_NAME}", twitter_handle)})
+        elif example.startswith("answer_"):
+            examples.append({"role": "assistant", "content": all_examples[example]})
 
     conversation.insert(0, system_prompt)
     for example in examples:
@@ -48,4 +55,7 @@ def decide_command(conversation):
     # -------------------------------------------------------------------------#
     # Get the text to generate
     # -------------------------------------------------------------------------#
-    return generate_text.generate_text(api_key, prompt=conversation)
+    return generate_text.generate_text(api_key, prompt = conversation)
+
+if __name__ == '__main__':
+    print(decide_command([{'role': 'user', 'content': 'Hello, my name is Doug'}]))

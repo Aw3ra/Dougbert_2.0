@@ -1,11 +1,11 @@
 import http.client
 
-conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
+
 
 
 def like_tweet(tweetID, session, key):
     payload = f"tweet_id={tweetID}"
-
+    conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     headers = {
         'content-type': "application/x-www-form-urlencoded",
         'twttr-session': session,

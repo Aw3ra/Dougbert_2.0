@@ -7,14 +7,17 @@ from datetime import datetime
 import asyncio
 import time
 
-session = os.getenv("DOUGBERT_SESSION")
-twitter_handle = str(os.getenv("TWITTER_HANDLE"))
-rapid_api_key = os.getenv("RAPID_API_KEY")
 
-conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
-prisma_client = Client()
+
+
+
+
+
+
 
 def search_notifications(session, query):
+    conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
+    rapid_api_key = os.getenv("RAPID_API_KEY")
     try:
         headers = {
             'twttr-session': session,
@@ -45,6 +48,7 @@ def search_notifications(session, query):
         raise e
 
 async def save_notifications(notifications):
+    prisma_client = Client()
     try:
         await prisma_client.connect()
         if notifications is not None:
@@ -68,6 +72,9 @@ async def save_notifications(notifications):
         await prisma_client.disconnect()
 
 def get_notifications():
+    dotenv.load_dotenv()
+    session = os.getenv("DOUGBERT_SESSION")
+    twitter_handle = str(os.getenv("TWITTER_HANDLE"))
     max_retries = 5
     for i in range(max_retries):
         try:
@@ -82,5 +89,5 @@ def get_notifications():
                 print('Error encountered on the final attempt. No further retries will be made.')
                 raise  # re-raise the last exception
 
-if __name__ == '__main__':
-    get_notifications()
+# if __name__ == '__main__':
+#     search_notifications(session, twitter_handle)

@@ -8,7 +8,7 @@ import re
 import time
 
 
-prisma_client = Client()
+
 
 def perform_action(action, tweet_conversation, tweet_id = None):
     try:
@@ -35,10 +35,14 @@ def perform_action(action, tweet_conversation, tweet_id = None):
             print('Check Solana price')
         elif action == 'H':
             print('Lookup user profile')
+        elif action == 'I':
+            # To user name is the last user name in the thread
+            return twttr_handler.decide_action('send-dm', tweet = 'Hello', to_user_name = tweet_conversation[-1]['content'].split(':')[0])
     except Exception as e:
         raise e
 
 def respond_to_notification():
+    prisma_client = Client()
     async def update_actioned(tweet):
         await prisma_client.connect()
         await prisma_client.notification.update(where = {"tweetId": tweet.tweetId}, data = {"actioned": True})
@@ -79,7 +83,9 @@ def respond_to_notification():
         print('No tweets to respond to')
 
 
-
+def testing():
+    tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = "1664497913299632128")
+    return perform_action('I', tweet_conversation)
 
 # twitter_handler.decide_action('reply_to_tweet', tweet = 'Test tweet', tweet_id = asyncio.run(get_tweet()).tweetId)
 

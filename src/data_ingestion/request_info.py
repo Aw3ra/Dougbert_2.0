@@ -2,15 +2,9 @@ import pinecone
 import os
 import openai
 
-pinecone_api = os.getenv("PINECONE_API_KEY")
-pinecone_env = os.getenv("PINECONE_ENVIRONMENT")
-index_name = os.getenv("PINECONE_INDEX_NAME")
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# initialise Pinecone
-pinecone.init(api_key=pinecone_api, environment=pinecone_env)
-# create a new index
-index = pinecone.Index(index_name=index_name)
+
+
 
 # initialise OpenAI
 
@@ -27,6 +21,8 @@ def create_vector(prompt):
 # Function to search for similar vectors
 # Takes in a prompt and returns a list of similar vectors
 def search_vectors(prompt):
+    index_name = os.getenv("PINECONE_INDEX_NAME")
+    index = pinecone.Index(index_name=index_name)
     # Create a vector from the prompt
     vector = create_vector(prompt)
     # Search for similar vectors
@@ -40,6 +36,13 @@ def search_vectors(prompt):
 
 # FUnction to return the system message if something is found, or a default message if nothing is found
 def return_system_message(query):
+    pinecone_api = os.getenv("PINECONE_API_KEY")
+    pinecone_env = os.getenv("PINECONE_ENVIRONMENT")
+    
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    # initialise Pinecone
+    pinecone.init(api_key=pinecone_api, environment=pinecone_env)
+
     query = query[0]['content']
     print(query)
     result = search_vectors(query)

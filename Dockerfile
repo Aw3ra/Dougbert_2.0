@@ -33,4 +33,4 @@ ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
 
 # Run the command to start your application
-CMD ["python", "/src/main.py"]
+CMD ["python","-u", "/src/main.py"]

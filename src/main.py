@@ -6,13 +6,11 @@ import schedule
 import time
 import threading
 import os
+from dotenv import load_dotenv
+
+
 
 lock = threading.Lock()
-
-notif_search_time =  int(os.getenv('NOTIFICATION_SEARCH_TIME'))
-respond_time = int(os.getenv('RESPOND_TIME'))
-post_time = int(os.getenv('POST_TIME'))
-
 
 # Every 10 minutes try to save new tweets
 
@@ -20,30 +18,36 @@ post_time = int(os.getenv('POST_TIME'))
 def search_tweets():
     with lock:
         try:
-            print('Searching for tweets')
+            print('Searching for tweets', flush=True)
             twttr_search_tweets.get_notifications()
         except Exception as e:
-            print('Error in search_tweets: '    + str(e))
+            print('Error in search_tweets: '    + str(e), flush=True)
 
 def respond_to_notification():
     with lock:
         try:
-            print('Responding to notifications')
+            print('Responding to notifications', flush=True)
             responding.respond_to_notification()
         except Exception as e:
-            print('Error in respond_to_notification: '    + str(e))
+            print('Error in respond_to_notification: '    + str(e), flush=True)
 
 def post_new_tweet():
     with lock:
         try:
-            print('Posting new tweet')
+            print('Posting new tweet', flush=True)
             post_new.post_tweet()
         except Exception as e:
-            print('Error in post_new_tweet: '    + str(e))
+            print('Error in post_new_tweet: '    + str(e), flush=True)
 
 
 def main():
-    print('Starting initial search, response, and post')
+    # Use this to load environment variables from .env file
+    load_dotenv()
+    notif_search_time =  int(os.getenv('NOTIFICATION_SEARCH_TIME'))
+    respond_time = int(os.getenv('RESPOND_TIME'))
+    post_time = int(os.getenv('POST_TIME'))
+    print(notif_search_time, respond_time, post_time, flush=True)
+    print('Starting initial search, response, and post', flush=True)
     search_tweets()
     respond_to_notification()
     post_new_tweet()
@@ -55,4 +59,4 @@ def main():
         time.sleep(1)
 
 if __name__ == '__main__':
-    main()
+    print(responding.testing())
