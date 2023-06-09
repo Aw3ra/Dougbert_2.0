@@ -5,8 +5,6 @@ import json
 import time
 
 
-
-
 def post_tweet():
     max_retries = 5
     for i in range(max_retries):

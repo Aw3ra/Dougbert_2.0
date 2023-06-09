@@ -2,17 +2,11 @@ import http.client
 import dotenv
 import os
 import json
-from prisma import Client
+from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 from datetime import datetime
 import asyncio
 import time
-
-
-
-
-
-
-
 
 
 def search_notifications(session, query):
@@ -47,33 +41,35 @@ def search_notifications(session, query):
     except Exception as e:
         raise e
 
-async def save_notifications(notifications):
-    prisma_client = Client()
+def save_notifications(notifications):
+    client = MongoClient(os.getenv("MONGO_URL"))
+    db = client["Shrempbrain_prod"]
+    notifications_collection = db["notifications"]
     try:
-        await prisma_client.connect()
         if notifications is not None:
             saved_notifications = 0
             for notification in notifications:
                 try:
-                    await prisma_client.notification.create({
-                            "tweetId": str(notification["id"]),
+                    result = notifications_collection.insert_one({
+                            "_id": str(notification["id"]),
                             "content": notification["full_text"],
                             "createdAt": notification["created_at"],
                             "authorId": str(notification["user_id"])
                         }
                     )
-                except:
+                    if result.acknowledged:
+                        saved_notifications += 1
+                except DuplicateKeyError:
                     break
-                saved_notifications +=1
             print("Saved: ", saved_notifications)
     except Exception as e:
         raise e
     finally:
-        await prisma_client.disconnect()
+        client.close()
 
 def get_notifications():
     dotenv.load_dotenv()
-    session = os.getenv("DOUGBERT_SESSION")
+    session = os.getenv("SHREMPBRAIN_SESSION")
     twitter_handle = str(os.getenv("TWITTER_HANDLE"))
     max_retries = 5
     for i in range(max_retries):

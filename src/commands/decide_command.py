@@ -28,10 +28,6 @@ def decide_command(conversation):
     "C: Retweet last tweet",
     "D: Like last tweet",
     "E: Follow user",
-    "F: Search the internet",
-    "G: Check Solana price",
-    "H: Lookup user profile",
-    "I: Send tip for bing funny and/or informative",
     ]
 
     command_string = ""

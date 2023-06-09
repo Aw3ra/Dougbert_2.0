@@ -14,10 +14,8 @@ def perform_action(action, tweet_conversation, tweet_id = None):
     try:
         if action == 'B':
             # Create ai response first
-            tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
-            print(tweet_response)
+            tweet_response = create_tweet_response.build_message(tweet_conversation)
             twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
-            print('Replied to tweet')
         elif action == 'C':
             twttr_handler.decide_action('retweet', tweet_id = tweet_id)
             print('Retweeted tweet')
@@ -26,18 +24,6 @@ def perform_action(action, tweet_conversation, tweet_id = None):
             print('Liked tweet')
         elif action == 'E':
             print('Follow user')
-        elif action == 'F':
-            print('Search the internet')
-            # Create ai response first
-            tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
-            twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
-        elif action == 'G':
-            print('Check Solana price')
-        elif action == 'H':
-            print('Lookup user profile')
-        elif action == 'I':
-            # To user name is the last user name in the thread
-            return twttr_handler.decide_action('send-dm', tweet = 'Hello', to_user_name = tweet_conversation[-1]['content'].split(':')[0])
     except Exception as e:
         raise e
 
