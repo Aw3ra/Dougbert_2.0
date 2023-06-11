@@ -3,6 +3,7 @@ import os
 import json
 from dotenv import load_dotenv
 import re
+import random
 
 
 
@@ -13,8 +14,9 @@ def build_message(content, prior_known_info = None):
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     with open('src/profile.json', 'r', encoding='utf-8') as f:
-        examples = json.load(f)['system_prompts']['new_tweet']
-        system_prompt = examples['system_prompt']
+        examples = json.load(f)['system_prompts']['tweet_response']['system_prompts']
+        # Randomly pick between the two system prompts
+        system_prompt = random.choice(examples)
 
     standard_system_message = {'role': 'assistant', 'content': system_prompt}
     try:
