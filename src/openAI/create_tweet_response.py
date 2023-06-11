@@ -2,7 +2,7 @@ from openAI.functions import generate_text
 import os
 import json
 from dotenv import load_dotenv
-
+import re
 
 
 
@@ -27,10 +27,7 @@ def build_message(content, prior_known_info = None):
             message.append(tweets)
         message.insert(0, system_message)
         response = generate_text.generate_text(api_key, prompt=message)
-        if response.startswith('DougbertAI:'):
-            response = response.split(' ', 1)[1]
-        while response.startswith('@'):
-            response = response.split(' ', 1)[1]
+        response = re.sub(r"^\w+:\s", "", response)
         return response
     except Exception as e:
         print(f'Error in build_message: {e}', flush=True)

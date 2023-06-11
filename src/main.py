@@ -46,7 +46,6 @@ def main():
     notif_search_time =  int(os.getenv('NOTIFICATION_SEARCH_TIME'))
     respond_time = int(os.getenv('RESPOND_TIME'))
     post_time = int(os.getenv('POST_TIME'))
-    print(notif_search_time, respond_time, post_time, flush=True)
     print('Starting initial search, response, and post', flush=True)
     search_tweets()
     respond_to_notification()
@@ -59,4 +58,4 @@ def main():
         time.sleep(1)
 
 if __name__ == '__main__':
-    print(responding.testing())
+    main()

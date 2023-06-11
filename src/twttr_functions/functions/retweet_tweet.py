@@ -1,8 +1,6 @@
 import http.client
 
 
-
-
 def retweet_tweet(tweetID, session, key):
     payload = f"tweet_id={tweetID}"
     conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")

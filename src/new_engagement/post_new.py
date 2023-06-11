@@ -39,13 +39,10 @@ def post_tweet_new():
         else:
             # This branch will be taken 95% of the time
             tweet_id = twttr_handler.decide_action('random-timeline')
-            print('Tweet ID: ', tweet_id)
             tweet_conversation = twttr_handler.decide_action('conversation', tweet_id=tweet_id)
-            print('Tweet conversation: ', tweet_conversation)
             tweet = create_tweet_response.build_message(tweet_conversation)
             print('Tweet: ', tweet)
             print(twttr_handler.decide_action('tweet', tweet=tweet, tweet_id=tweet_id), flush=True)
-            print('Replied to tweet')
     except Exception as e:
         raise e
 

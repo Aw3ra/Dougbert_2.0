@@ -9,7 +9,7 @@ import time
 
 def decide_action(action, tweet_id = None, tweet = None, email = None, password = None, to_user_name = None, to_user_id = None, media_id = None):
     load_dotenv()
-    SESSION = os.getenv("DOUGBERT_SESSION")
+    SESSION = os.getenv("SHREMPBRAIN_SESSION")
     RAPID_API_KEY = os.getenv("RAPID_API_KEY")
     retries = 5
     for i in range(retries):

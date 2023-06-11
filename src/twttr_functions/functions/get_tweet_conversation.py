@@ -30,7 +30,7 @@ def get_tweet(tweet_id, key):
             try:
                 content = i['content']['content']['tweetResult']['result']['legacy']['full_text']
                 user_name = i['content']['content']['tweetResult']['result']['core']['user_result']['result']['legacy']['screen_name']
-                if user_name == 'DougbertAI': dict_to_add['role'] = 'assistant'
+                if user_name == 'shrempbrain': dict_to_add['role'] = 'assistant'
                 else: dict_to_add['role'] = 'user'
                 dict_to_add['content'] = user_name + ': ' +content
                 conversation.append(dict_to_add)

@@ -26,7 +26,7 @@ def search_notifications(session, query):
         # dump it as a json
         notifications = []
         for tweet in tweets:
-            if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == 1610746366682361856:
+            if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == os.getenv("TWITTER_ID"):
                 continue
             tweet_dict = {}
             tweet_dict['id'] = tweets[tweet]['id']
@@ -36,28 +36,30 @@ def search_notifications(session, query):
             tweet_dict['full_text'] = tweets[tweet]['full_text']
             notifications.append(tweet_dict)
             # Return the notifications in reverse order
-        time.sleep(60)
         return notifications[::-1]
     except Exception as e:
         raise e
 
 def save_notifications(notifications):
-    client = MongoClient(os.getenv("MONGO_URL"))
+    client = MongoClient(os.getenv("DATABASE_URL"))
     db = client["Shrempbrain_prod"]
     notifications_collection = db["notifications"]
+    notifications_collection.insert_one
     try:
         if notifications is not None:
             saved_notifications = 0
             for notification in notifications:
                 try:
-                    result = notifications_collection.insert_one({
+                    result = notifications_collection.insert_one(
+                        {
                             "_id": str(notification["id"]),
                             "content": notification["full_text"],
                             "createdAt": notification["created_at"],
-                            "authorId": str(notification["user_id"])
+                            "authorId": str(notification["user_id"]),
+                            "actioned": False
                         }
                     )
-                    if result.acknowledged:
+                    if result:
                         saved_notifications += 1
                 except DuplicateKeyError:
                     break
@@ -74,7 +76,7 @@ def get_notifications():
     max_retries = 5
     for i in range(max_retries):
         try:
-            asyncio.run(save_notifications(search_notifications(session, twitter_handle)))
+            save_notifications(search_notifications(session, twitter_handle))
             break  # if the function runs successfully, break the loop
         except Exception as e:
             if i < max_retries - 1:  # i starts at 0, so we subtract 1

@@ -37,9 +37,8 @@ def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
                 in_reply_to_status_id = data['data']['create_tweet']['tweet_result']['result']['rest_id']
                 time.sleep(2)
             except Exception as e:
-                print(e)
+                pass
     except Exception as e:
-        print(e)
         raise e
 
 def split_text_by_punctuation(text, max_chars=280):
