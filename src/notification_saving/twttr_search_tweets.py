@@ -78,7 +78,7 @@ async def save_notifications(notifications):
 
 def get_notifications():
     dotenv.load_dotenv()
-    session = os.getenv("DOUGBERT_SESSION")
+    session = os.getenv("SESSION")
     twitter_handle = str(os.getenv("TWITTER_HANDLE"))
     max_retries = 5
     for i in range(max_retries):
