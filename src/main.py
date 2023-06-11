@@ -50,13 +50,11 @@ def main():
     print('Starting initial search, response, and post', flush=True)
     search_tweets()
     respond_to_notification()
-    post_new_tweet()
     schedule.every(notif_search_time).minutes.do(search_tweets)
     schedule.every(respond_time).minutes.do(respond_to_notification)
-    schedule.every(post_time).minutes.do(post_new_tweet)
     while True:
         schedule.run_pending()
         time.sleep(1)
 
 if __name__ == '__main__':
-    print(responding.testing())
+    main()

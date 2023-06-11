@@ -44,4 +44,4 @@ def decide_action(action, tweet_id = None, tweet = None, email = None, password 
                 raise  # re-raise the last exception
 
 # if __name__ == '__main__':
-#     print(decide_action('get-dms', SESSION, RAPID_API_KEY))
+#     print(decide_action('send-dms', "Here have a tip: 0.0001 SOL", to_user_name="0xawera"))

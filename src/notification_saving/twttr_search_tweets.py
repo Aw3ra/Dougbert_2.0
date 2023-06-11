@@ -2,22 +2,16 @@ import http.client
 import dotenv
 import os
 import json
-from prisma import Client
+from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 from datetime import datetime
 import asyncio
 import time
 
-
-
-
-
-
-
-
-
 def search_notifications(session, query):
     conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     rapid_api_key = os.getenv("RAPID_API_KEY")
+    query = "mentions:"+query
     try:
         headers = {
             'twttr-session': session,
@@ -42,34 +36,39 @@ def search_notifications(session, query):
             tweet_dict['full_text'] = tweets[tweet]['full_text']
             notifications.append(tweet_dict)
             # Return the notifications in reverse order
-        time.sleep(60)
         return notifications[::-1]
     except Exception as e:
         raise e
 
 async def save_notifications(notifications):
-    prisma_client = Client()
+    client = MongoClient(os.getenv("DATABASE_URL"))
+    db = client["Dougbert_prod"]
+    notifications_collection = db["notification"]
     try:
-        await prisma_client.connect()
         if notifications is not None:
             saved_notifications = 0
             for notification in notifications:
                 try:
-                    await prisma_client.notification.create({
-                            "tweetId": str(notification["id"]),
-                            "content": notification["full_text"],
-                            "createdAt": notification["created_at"],
-                            "authorId": str(notification["user_id"])
-                        }
-                    )
-                except:
+                    # Insert the notification into the database if it doesn't already exist based on the tweetId
+                    if not notifications_collection.find_one({"tweetId": str(notification["id"])}):
+                        result = notifications_collection.insert_one(
+                            {
+                                "tweetId": str(notification["id"]),
+                                "content": notification["full_text"],
+                                "createdAt": notification["created_at"],
+                                "authorId": str(notification["user_id"]),
+                                "actioned": False
+                            }
+                        )
+                        if result:
+                            saved_notifications += 1
+                except DuplicateKeyError:
                     break
-                saved_notifications +=1
             print("Saved: ", saved_notifications)
     except Exception as e:
         raise e
     finally:
-        await prisma_client.disconnect()
+        client.close()
 
 def get_notifications():
     dotenv.load_dotenv()

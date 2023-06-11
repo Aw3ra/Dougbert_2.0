@@ -6,6 +6,11 @@ from openAI import create_tweet_response
 from data_ingestion import request_info
 import re
 import time
+from dotenv import load_dotenv
+from pymongo import MongoClient
+import os
+import random
+
 
 
 
@@ -15,19 +20,14 @@ def perform_action(action, tweet_conversation, tweet_id = None):
         if action == 'B':
             # Create ai response first
             tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
-            print(tweet_response)
             twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
-            print('Replied to tweet')
         elif action == 'C':
             twttr_handler.decide_action('retweet', tweet_id = tweet_id)
-            print('Retweeted tweet')
         elif action == 'D':
             twttr_handler.decide_action('like', tweet_id = tweet_id)
-            print('Liked tweet')
         elif action == 'E':
             print('Follow user')
         elif action == 'F':
-            print('Search the internet')
             # Create ai response first
             tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
             twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
@@ -36,56 +36,69 @@ def perform_action(action, tweet_conversation, tweet_id = None):
         elif action == 'H':
             print('Lookup user profile')
         elif action == 'I':
+            print('Sending tip')
+            # Create message along with the tip
+            tweet_response = create_tweet_response.build_tip_message(tweet_conversation)
             # To user name is the last user name in the thread
-            return twttr_handler.decide_action('send-dm', tweet = 'Hello', to_user_name = tweet_conversation[-1]['content'].split(':')[0])
+            return twttr_handler.decide_action('send-dm', tweet = tweet_response, to_user_name = tweet_conversation[-1]['content'].split(':')[0])
     except Exception as e:
         raise e
 
 def respond_to_notification():
-    prisma_client = Client()
-    async def update_actioned(tweet):
-        await prisma_client.connect()
-        await prisma_client.notification.update(where = {"tweetId": tweet.tweetId}, data = {"actioned": True})
-        await prisma_client.disconnect()
+    load_dotenv()
+    client = MongoClient(os.getenv("DATABASE_URL"))
+    db = client["Dougbert_prod"]
+    notifications_collection = db["notification"]
 
-    async def get_tweet():
-        await prisma_client.connect()
-        tweets = await prisma_client.notification.find_many(where = {"actioned": False})
-        await prisma_client.disconnect()
+    # Function to update actioned to true
+    def update_actioned(tweet):
+        notifications_collection.update_one({"tweetId": tweet}, {"$set": {"actioned": True}})
+
+    def get_tweet():
+        tweets = list(notifications_collection.find({"actioned": False}))
         tweets.reverse()
         if len(tweets) == 0:
             return None
-        return tweets
-    tweets = asyncio.run(get_tweet())
-    if tweets != None:
-        for tweet in tweets:
-            try:
-                if tweet == None:
-                    return
-                tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet.tweetId)
-                if len(tweet_conversation) != 0:
-                    actions = decide_command.decide_command(tweet_conversation)
-                    print(actions)
-                    actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
-                    if 'A' not in actions_list:
-                        for action in actions_list:
-                            perform_action(action, tweet_conversation, tweet_id=tweet.tweetId)
-                    else:
-                        print('Do nothing')
-                
-            except Exception as e:
-                print(f'Error in respond_to_notification: {e}')
-                raise e
-            finally:
-                asyncio.run(update_actioned(tweet))
-                time.sleep(20)
+        return tweets[0]
+
+
+    # 50/50 chance of getting a notification tweet or a random tweet
+    if random.randint(0,10) == 0:
+        tweet = twttr_handler.decide_action('random-timeline')
     else:
-        print('No tweets to respond to')
+        tweet = get_tweet()
+        print(tweet)
+        if tweet == None:
+            tweet = twttr_handler.decide_action('random-timeline')
+        else:
+            tweet = tweet['tweetId']
+
+    try:
+        if tweet == None:
+            return
+        tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet)
+        if len(tweet_conversation) != 0:
+            actions = decide_command.decide_command(tweet_conversation)
+            print(actions)
+            actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
+            if 'A' not in actions_list:
+                for action in actions_list:
+                    perform_action(action, tweet_conversation, tweet_id=tweet)
+            else:
+                print('Do nothing')
+        update_actioned(tweet)
+        
+    except Exception as e:
+        print(f'Error in respond_to_notification: {e}')
+        raise e
+    finally:
+        time.sleep(20) 
 
 
 def testing():
-    tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = "1664497913299632128")
-    return perform_action('I', tweet_conversation)
+    # tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = "1664497913299632128")
+    print(twttr_handler.decide_action('send-dm', tweet = 'Thankyou so much for interacting with me! Here\'s a little tip for your time!', to_user_name = '_qudo'))
+    # return perform_action('I', tweet_conversation)
 
 # twitter_handler.decide_action('reply_to_tweet', tweet = 'Test tweet', tweet_id = asyncio.run(get_tweet()).tweetId)
 

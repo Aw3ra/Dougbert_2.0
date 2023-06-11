@@ -19,7 +19,8 @@ def get_tweet(tweet_id, key):
         data = res.read()
         json_data = json.loads(data)
         if len(json_data) == 0: return []
-
+        # If ['data'] is empty, then the tweet is not a conversation. This also applies if it does not exist
+        if len(json_data['data']) == 0: return []
         json_data = json_data['data']['timeline_response']['instructions']
         content = []
         count = 0
@@ -36,7 +37,6 @@ def get_tweet(tweet_id, key):
                 conversation.append(dict_to_add)
             except Exception as e:
                 break
-
         return conversation
     except Exception as e:
         print(e)
