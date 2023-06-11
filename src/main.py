@@ -31,15 +31,6 @@ def respond_to_notification():
         except Exception as e:
             print('Error in respond_to_notification: '    + str(e), flush=True)
 
-def post_new_tweet():
-    with lock:
-        try:
-            print('Posting new tweet', flush=True)
-            post_new.post_tweet()
-        except Exception as e:
-            print('Error in post_new_tweet: '    + str(e), flush=True)
-
-
 def main():
     # Use this to load environment variables from .env file
     load_dotenv()

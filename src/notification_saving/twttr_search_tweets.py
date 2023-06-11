@@ -11,20 +11,22 @@ import time
 def search_notifications(session, query):
     conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     rapid_api_key = os.getenv("RAPID_API_KEY")
-    query = "mentions:"+query
     try:
         headers = {
             'twttr-session': session,
             'X-RapidAPI-Key': rapid_api_key,
             'X-RapidAPI-Host': "twttrapi.p.rapidapi.com"
         }
-        conn.request("GET", f"/search-users?query={query}", headers=headers)
+        query = f"/search-users?query={query}"
+        conn.request("GET", query, headers=headers)
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
         tweets = data['globalObjects']['tweets']
+        # If the tweet contains a "scope" key, filter these out
+        tweets = {tweet: tweets[tweet] for tweet in tweets if 'scopes' not in tweets[tweet]}
         # dump it as a json
-        notifications = []
+        new_notifications = []
         for tweet in tweets:
             if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == 1610746366682361856:
                 continue
@@ -34,16 +36,20 @@ def search_notifications(session, query):
             # Convert to datetime object
             tweet_dict['created_at'] = datetime.strptime(tweets[tweet]['created_at'], '%a %b %d %H:%M:%S %z %Y')
             tweet_dict['full_text'] = tweets[tweet]['full_text']
-            notifications.append(tweet_dict)
+            new_notifications.append(tweet_dict)
             # Return the notifications in reverse order
-        return notifications[::-1]
+        return new_notifications[::-1]
     except Exception as e:
         raise e
 
 async def save_notifications(notifications):
     client = MongoClient(os.getenv("DATABASE_URL"))
-    db = client["Dougbert_prod"]
-    notifications_collection = db["notification"]
+    with open('src/profile.json', 'r', encoding='utf-8') as f:
+        records = json.load(f)['config_data']
+        database = records["Database_records"]['Database']
+        collection = records["Database_records"]["Collection"]
+    db = client[database]
+    notifications_collection = db[collection]
     try:
         if notifications is not None:
             saved_notifications = 0
@@ -88,5 +94,7 @@ def get_notifications():
                 print('Error encountered on the final attempt. No further retries will be made.')
                 raise  # re-raise the last exception
 
-# if __name__ == '__main__':
-#     search_notifications(session, twitter_handle)
+if __name__ == '__main__':
+    session = "blah"
+    twitter_handle = "dougbertai"
+    get_notifications()

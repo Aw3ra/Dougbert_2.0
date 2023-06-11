@@ -1,4 +1,4 @@
-from .functions import get_tweet, get_tweet_conversation, post_alternatate, retweet_tweet, like_tweet, login_alternate, get_timeline_tweets, send_dm
+from .functions import get_tweet, post_alternatate, retweet_tweet, like_tweet, login_alternate, get_timeline_tweets, send_dm
 import os
 from dotenv import load_dotenv
 import time

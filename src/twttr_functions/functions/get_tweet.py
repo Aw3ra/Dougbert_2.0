@@ -49,10 +49,3 @@ def get_tweet_conversation(tweet_id, key):
         conversation += get_tweet_conversation(new_tweet_id, key) # Append the result of recursive call to conversation
     return conversation[::-1]
 
-
-
-if __name__ == '__main__':
-    for i in range(1):
-        print(get_tweet_conversation(tweet_id, "2665401a98mshb4ff8c9c9dc53efp1568abjsn0ce6e816b0c1"))
-        time.sleep(60)
-

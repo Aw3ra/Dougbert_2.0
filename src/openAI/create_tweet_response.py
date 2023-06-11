@@ -26,12 +26,6 @@ def build_message(content, prior_known_info = None):
         for tweets in content:
             message.append(tweets)
         message.insert(0, system_message)
-        if len(message) < 2:
-            # Add two examples to the message
-            message.append({'role': 'user', 'content': '0xAwera: Hello, my name is awera!'})
-            message.append({'role': 'assistant', 'content': 'DougbertAI: Hello awera, how are you doing today?'})
-            message.append({'role': 'user', 'content': '0xAwera: I am doing great, how are you?'})
-            message.append({'role': 'assistant', 'content': 'DougbertAI: I am doing well, thank you for asking.'})
         response = generate_text.generate_text(api_key, prompt=message)
         if response.startswith('DougbertAI:'):
             response = response.split(' ', 1)[1]
@@ -58,12 +52,6 @@ def build_tip_message(content, prior_known_info = None):
         for tweets in content:
             message.append(tweets)
         message.insert(0, system_message)
-        if len(message) < 2:
-            # Add two examples to the message
-            message.append({'role': 'user', 'content': '0xAwera: Wow you are so nice!'})
-            message.append({'role': 'assistant', 'content': 'DougbertAI: Thankyou so much for telling me that I am nice! I have sent you a tip!'})
-            message.append({'role': 'user', 'content': '0xAwera: Wow you have such beautiful eyes!'})
-            message.append({'role': 'assistant', 'content': 'DougbertAI: Thankyou so much for telling me that I have beautiful eyes! I have sent you a tip!'})
         response = generate_text.generate_text(api_key, prompt=message)
         if response.startswith('DougbertAI:'):
             response = response.split(' ', 1)[1]

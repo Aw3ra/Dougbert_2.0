@@ -1,5 +1,4 @@
-from prisma import Client
-import asyncio
+import json
 from commands import decide_command
 from twttr_functions import twttr_handler
 from openAI import create_tweet_response
@@ -47,12 +46,15 @@ def perform_action(action, tweet_conversation, tweet_id = None):
 def respond_to_notification():
     load_dotenv()
     client = MongoClient(os.getenv("DATABASE_URL"))
-    db = client["Dougbert_prod"]
-    notifications_collection = db["notification"]
+    with open('src/profile.json', 'r', encoding='utf-8') as f:
+        records = json.load(f)['config_data']
+        database = records["Database_records"]['Database']
+        collection = records["Database_records"]["Collection"]
+        notifications_collection = client[database][collection]
 
     # Function to update actioned to true
     def update_actioned(tweet):
-        notifications_collection.update_one({"tweetId": tweet}, {"$set": {"actioned": True}})
+        result = notifications_collection.update_one({"tweetId": tweet}, {"$set": {"actioned": True}})
 
     def get_tweet():
         tweets = list(notifications_collection.find({"actioned": False}))
@@ -67,7 +69,6 @@ def respond_to_notification():
         tweet = twttr_handler.decide_action('random-timeline')
     else:
         tweet = get_tweet()
-        print(tweet)
         if tweet == None:
             tweet = twttr_handler.decide_action('random-timeline')
         else:

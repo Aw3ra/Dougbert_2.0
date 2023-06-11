@@ -1,9 +1,5 @@
 import http.client
-import os
 import json
-
-key = os.getenv('RAPID_API_KEY')
-session = os.getenv('DOUGBERT_SESSION')
 
 conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
 
@@ -26,10 +22,3 @@ def get_dms(session, rapid_api_key):
         status = convo['status']
         user = convo['participants'][0]['user_id']
         print(user, status, sep = '   |   ')
-    
-
-
-
-
-
-get_dms(session, key)

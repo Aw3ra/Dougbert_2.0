@@ -22,18 +22,11 @@ def decide_command(conversation):
         api_key = os.getenv("OPENAI_API_KEY")
         twitter_handle = str(os.getenv("TWITTER_HANDLE"))
         prompts = json.load(open('src/commands/command_generating_prompts.json', 'r'))['command_decision']
+        with open('src/profile.json', 'r', encoding='utf-8') as f:
+            LIST_OF_COMMANDS = json.load(f)['config_data']['command_status']
+            # Remove the commands that have a status of False
+            LIST_OF_COMMANDS = [command for command in LIST_OF_COMMANDS if LIST_OF_COMMANDS[command] == True]
         # prompts = find_json.find_json_file('command_generating_prompts.json')['command_decision']
-        LIST_OF_COMMANDS = [
-        "A: Do nothing",
-        "B: Reply to last tweet"
-        "C: Retweet last tweet",
-        "D: Like last tweet",
-        "E: Follow user",
-        "F: Search the internet",
-        "G: Check Solana price",
-        "H: Lookup user profile",
-        "I: Send tip for being funny, informative or really nice",
-        ]
 
         command_string = ""
         for command in LIST_OF_COMMANDS:

@@ -37,7 +37,7 @@ def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
                 in_reply_to_status_id = data['data']['create_tweet']['tweet_result']['result']['rest_id']
                 time.sleep(2)
             except:
-                pass
+                return
     except Exception as e:
         print('Error encountered trying to post tweet: ' + str(e))
 
