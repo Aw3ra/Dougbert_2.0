@@ -2,6 +2,8 @@ from openAI.functions import generate_text
 import os
 import json
 from dotenv import load_dotenv
+import random
+import re
 
 
 
@@ -13,9 +15,9 @@ def build_message(content, prior_known_info = None):
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     with open('src/profile.json', 'r', encoding='utf-8') as f:
-        examples = json.load(f)['system_prompts']['tweet_response']
-        system_prompt = examples['system_prompt']
-
+        examples = json.load(f)['system_prompts']['tweet_response']['system_prompt']
+        # Pick a random system prompt out of the array
+        system_prompt = random.choice(examples)
     standard_system_message = {'role': 'assistant', 'content': system_prompt}
     try:
         if prior_known_info is not None:
@@ -31,6 +33,7 @@ def build_message(content, prior_known_info = None):
             response = response.split(' ', 1)[1]
         while response.startswith('@'):
             response = response.split(' ', 1)[1]
+        response = re.sub(r"^[^:]+:\s", "", response)
         return response
     except Exception as e:
         print(f'Error in build_message: {e}', flush=True)
