@@ -13,7 +13,7 @@ def build_message(content, prior_known_info = None):
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     with open('src/profile.json', 'r', encoding='utf-8') as f:
-        examples = json.load(f)['system_prompts']['tweet_response']
+        examples = json.load(f)['system_prompts']['tweet_response']['system_prompt']
         system_prompt = examples['system_prompt']
 
     standard_system_message = {'role': 'assistant', 'content': system_prompt}
@@ -40,7 +40,7 @@ def build_message(content, prior_known_info = None):
 def build_tip_message(content, prior_known_info = None):
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
-    system_prompt = "You are DougbertAI and you have been tasked with sending a tip in response to tweets, your job is to write the message that accompanies the tip."
+    system_prompt = "You are DougbertAI and you have been tasked with sending a monetary tip in response to tweets, your job is to write the message that accompanies the tip."
 
     standard_system_message = {'role': 'assistant', 'content': system_prompt}
     try:
