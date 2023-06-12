@@ -5,7 +5,7 @@ import os
 
 
 
-def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
+def post_tweet(tweet_text, session, key, in_reply_to_status_id=None):
     url = "https://twttrapi.p.rapidapi.com/create-tweet"
     try:
         tweets = []
@@ -14,7 +14,6 @@ def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
             tweets = split_text_by_punctuation(tweet_text)
         else:
             tweets.append(tweet_text)
-
         # Loop through the tweets and post them
         for tweet in tweets:
             if in_reply_to_status_id is not None:

@@ -69,6 +69,7 @@ def respond_to_notification():
 
 
     # 50/50 chance of getting a notification tweet or a random tweet
+    update_database = False
     if random.randint(0,10) == 0:
         tweet = twttr_handler.decide_action('random-timeline')
     else:
@@ -77,11 +78,13 @@ def respond_to_notification():
             tweet = twttr_handler.decide_action('random-timeline')
         else:
             tweet = tweet['tweetId']
+            update_database = True
 
     try:
         if tweet == None:
             return
         tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet)
+        print(tweet_conversation)
         if len(tweet_conversation) != 0:
             actions = decide_command.decide_command(tweet_conversation)
             actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
@@ -91,12 +94,12 @@ def respond_to_notification():
                 #     perform_action(action, tweet_conversation, tweet_id=tweet)
             else:
                 print('Do nothing')
-        update_actioned(tweet)
-        
+
     except Exception as e:
         print(f'Error in respond_to_notification: {e}')
-        raise e
     finally:
+        if update_database:
+            update_actioned(tweet)
         time.sleep(20) 
 
 

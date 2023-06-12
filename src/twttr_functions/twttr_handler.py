@@ -15,17 +15,17 @@ def decide_action(action, tweet_id = None, tweet = None, email = None, password 
     for i in range(retries):
         try:
             if action == 'like':
-                like_tweet.like_tweet(tweet_id, SESSION, RAPID_API_KEY)
+                return like_tweet.like_tweet(tweet_id, SESSION, RAPID_API_KEY)
             elif action == 'retweet':
-                retweet_tweet.retweet_tweet(tweet_id, SESSION, RAPID_API_KEY)
+                return retweet_tweet.retweet_tweet(tweet_id, SESSION, RAPID_API_KEY)
             elif action == 'tweet':
-                post_alternatate.post_tweet(tweet, SESSION, RAPID_API_KEY, in_reply_to_status_id=tweet_id)
+                return post_alternatate.post_tweet(tweet, SESSION, RAPID_API_KEY, in_reply_to_status_id=tweet_id)
             elif action == 'conversation':
                 return get_tweet.get_tweet_conversation(tweet_id, RAPID_API_KEY)
             elif action == 'log-in':
                 return login_alternate.login_to_twitter(email, password, RAPID_API_KEY)
             elif action == 'get-tweet':
-                return get_tweet.get_tweet(tweet_id, RAPID_API_KEY)
+                return get_tweet.get_tweet(tweet_id, RAPID_API_KEY, session=SESSION)
             elif action == 'random-timeline':
                 return get_timeline_tweets.get_tweet(RAPID_API_KEY, SESSION)
             elif action == 'send-dm':
