@@ -16,30 +16,34 @@ import random
 
 def perform_action(action, tweet_conversation, tweet_id = None):
     try:
-        if action == 'B':
-            # Create ai response first
-            tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
-            twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
-        elif action == 'C':
-            twttr_handler.decide_action('retweet', tweet_id = tweet_id)
-        elif action == 'D':
-            twttr_handler.decide_action('like', tweet_id = tweet_id)
-        elif action == 'E':
-            print('Follow user')
-        elif action == 'F':
-            # Create ai response first
-            tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
-            twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
-        elif action == 'G':
-            print('Check Solana price')
-        elif action == 'H':
-            print('Lookup user profile')
-        elif action == 'I':
-            print('Sending tip')
-            # Create message along with the tip
-            tweet_response = create_tweet_response.build_tip_message(tweet_conversation)
-            # To user name is the last user name in the thread
-            return twttr_handler.decide_action('send-dm', tweet = tweet_response, to_user_name = tweet_conversation[-1]['content'].split(':')[0])
+        # If the last tweet in the conversation is a message by the bot, ignore it
+        if not tweet_conversation[-1]['content'].startswith(os.getenv("TWITTER_HANDLE")):
+            if action == 'B':
+                # Create ai response first
+                tweet_response = create_tweet_response.build_message(tweet_conversation)
+                twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
+            elif action == 'C':
+                twttr_handler.decide_action('retweet', tweet_id = tweet_id)
+            elif action == 'D':
+                twttr_handler.decide_action('like', tweet_id = tweet_id)
+            elif action == 'E':
+                print('Follow user')
+            elif action == 'F':
+                # Create ai response first
+                tweet_response = create_tweet_response.build_message(tweet_conversation, prior_known_info = request_info.return_system_message(tweet_conversation))
+                twttr_handler.decide_action('tweet', tweet = tweet_response, tweet_id = tweet_id)
+            elif action == 'G':
+                print('Check Solana price')
+            elif action == 'H':
+                print('Lookup user profile')
+            elif action == 'I':
+                print('Sending tip')
+                # Create message along with the tip
+                tweet_response = create_tweet_response.build_tip_message(tweet_conversation)
+                # To user name is the last user name in the thread
+                return twttr_handler.decide_action('send-dm', tweet = tweet_response, to_user_name = tweet_conversation[-1]['content'].split(':')[0])
+        else:
+            print('Last tweet in conversation is by bot, ignoring')
     except Exception as e:
         raise e
 
@@ -80,11 +84,11 @@ def respond_to_notification():
         tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet)
         if len(tweet_conversation) != 0:
             actions = decide_command.decide_command(tweet_conversation)
-            print(actions)
             actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
             if 'A' not in actions_list:
-                for action in actions_list:
-                    perform_action(action, tweet_conversation, tweet_id=tweet)
+                perform_action('B', tweet_conversation, tweet_id=tweet)
+                # for action in actions_list:
+                #     perform_action(action, tweet_conversation, tweet_id=tweet)
             else:
                 print('Do nothing')
         update_actioned(tweet)

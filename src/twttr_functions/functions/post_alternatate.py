@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import os
 
 
 
@@ -31,10 +32,12 @@ def post_tweet(tweet_text, session,key, in_reply_to_status_id=None):
                 'X-RapidAPI-Key': key,
                 'X-RapidAPI-Host': "twttrapi.p.rapidapi.com"
             }
-            data = requests.post(url, data=payload, headers=headers).text
+            data = requests.post(url, data=payload, headers=headers)
             try:
-                data = json.loads(data)
+                data = json.loads(data.text)
                 in_reply_to_status_id = data['data']['create_tweet']['tweet_result']['result']['rest_id']
+                if in_reply_to_status_id is None:
+                    return
                 time.sleep(2)
             except:
                 return
@@ -89,3 +92,7 @@ def split_text_by_punctuation(text, max_chars=280):
             split_text.append(chunk)
 
     return split_text
+
+
+if __name__ == "__main__":
+    post_tweet("woweee, you funny man", os.getenv('SESSION'), os.getenv('RAPID_API_KEY'), in_reply_to_status_id="1667973390794207235")

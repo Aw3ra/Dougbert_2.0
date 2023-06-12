@@ -28,7 +28,7 @@ def search_notifications(session, query):
         # dump it as a json
         new_notifications = []
         for tweet in tweets:
-            if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == 1610746366682361856:
+            if 'retweeted_status_id_str' in tweets[tweet] or tweets[tweet]['user_id'] == os.getenv("TWITTER_ID"):
                 continue
             tweet_dict = {}
             tweet_dict['id'] = tweets[tweet]['id']
