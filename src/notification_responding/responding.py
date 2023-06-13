@@ -10,10 +10,6 @@ from pymongo import MongoClient
 import os
 import random
 
-
-
-
-
 def perform_action(action, tweet_conversation, tweet_id = None):
     try:
         # If the last tweet in the conversation is a message by the bot, ignore it
@@ -58,7 +54,7 @@ def respond_to_notification():
 
     # Function to update actioned to true
     def update_actioned(tweet):
-        result = notifications_collection.update_one({"tweetId": tweet}, {"$set": {"actioned": True}})
+        notifications_collection.update_one({"tweetId": tweet}, {"$set": {"actioned": True}})
 
     def get_tweet():
         tweets = list(notifications_collection.find({"actioned": False}))
@@ -66,7 +62,6 @@ def respond_to_notification():
         if len(tweets) == 0:
             return None
         return tweets[0]
-
 
     # 50/50 chance of getting a notification tweet or a random tweet
     update_database = False
@@ -90,16 +85,12 @@ def respond_to_notification():
             if 'A' not in actions_list:
                 for action in actions_list:
                     perform_action(action, tweet_conversation, tweet_id=tweet)
-            else:
-                print('Do nothing')
-
     except Exception as e:
         print(f'Error in respond_to_notification: {e}')
     finally:
         if update_database:
             update_actioned(tweet)
         time.sleep(20) 
-
 
 def testing():
     # tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = "1664497913299632128")
