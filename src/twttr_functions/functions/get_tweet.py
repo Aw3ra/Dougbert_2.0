@@ -9,6 +9,11 @@ import os
 tweet_id = '1668300110135169024'
 
 def get_tweet(tweet_id, key, session=None):
+    # Check if the tweet ID is a string and starts with a number
+    if not isinstance(tweet_id, str) or not tweet_id[0].isdigit():
+        raise ValueError('Invalid tweet ID')
+
+
     conn = http.client.HTTPSConnection("twttrapi.p.rapidapi.com")
     headers = {
         'twttr-session': session,
@@ -36,6 +41,9 @@ def request_tweet(tweet_id, key):
     return response.json()['data']['tweet_result']['result']['legacy']['full_text']
 
 def get_tweet_conversation(tweet_id, key, session=None):
+    if not isinstance(tweet_id, str) or not tweet_id[0].isdigit():
+        print('Invalid tweet ID')
+        return
     try:
         url = "https://twttrapi.p.rapidapi.com/get-tweet"
         querystring = {"tweet_id":tweet_id}
