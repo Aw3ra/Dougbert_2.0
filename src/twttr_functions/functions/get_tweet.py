@@ -43,7 +43,7 @@ def request_tweet(tweet_id, key):
 def get_tweet_conversation(tweet_id, key, session=None):
     if not isinstance(tweet_id, str) or not tweet_id[0].isdigit():
         print('Invalid tweet ID')
-        return
+        return None
     try:
         url = "https://twttrapi.p.rapidapi.com/get-tweet"
         querystring = {"tweet_id":tweet_id}
