@@ -84,7 +84,7 @@ def respond_to_notification():
         if tweet == None:
             return
         tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet)
-        if len(tweet_conversation) != 0:
+        if len(tweet_conversation) != 0 and tweet_conversation is not None:
             actions = decide_command.decide_command(tweet_conversation)
             actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
             if 'A' not in actions_list:
