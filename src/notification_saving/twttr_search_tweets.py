@@ -24,7 +24,7 @@ def search_notifications(session, query):
         data = json.loads(data)
         tweets = data['globalObjects']['tweets']
         # If the tweet contains a "scope" key, filter these out
-        tweets = {tweet: tweets[tweet] for tweet in tweets if 'scopes' not in tweets[tweet]}
+        tweets = {tweet: tweets[tweet] for tweet in tweets if 'scopes' not in tweets[tweet] and 'retweeted_status_id_str' not in tweets[tweet] and 'user_id_str'}
         # dump it as a json
         new_notifications = []
         for tweet in tweets:

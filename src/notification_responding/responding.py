@@ -9,11 +9,12 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import os
 import random
+from notification_responding import doug_logging
 
 def perform_action(action, tweet_conversation, tweet_id = None):
     try:
         # If the last tweet in the conversation is a message by the bot, ignore it
-        if not tweet_conversation[-1]['content'].startswith(os.getenv("TWITTER_HANDLE")):
+        if not tweet_conversation[-1]['content'].lower().startswith(os.getenv("TWITTER_HANDLE").lower()):
             if action == 'B':
                 # Create ai response first
                 tweet_response = create_tweet_response.build_message(tweet_conversation)
@@ -50,6 +51,8 @@ def respond_to_notification():
         records = json.load(f)['config_data']
         database = records["Database_records"]['Database']
         collection = records["Database_records"]["Collection"]
+        logs = records["Database_records"]["Logs"]
+        logs_collection = client[database][logs]
         notifications_collection = client[database][collection]
 
     # Function to update actioned to true
@@ -58,39 +61,51 @@ def respond_to_notification():
 
     def get_tweet():
         tweets = list(notifications_collection.find({"actioned": False}))
-        tweets.reverse()
         if len(tweets) == 0:
             return None
         return tweets[0]
-
+    print('Finding tweet to respond to')
     # 50/50 chance of getting a notification tweet or a random tweet
     update_database = False
     if random.randint(0,10) == 0:
+        print('Getting random tweet')
         tweet = twttr_handler.decide_action('random-timeline')
     else:
+        print('Getting notification tweet')
         tweet = get_tweet()
         if tweet == None:
+            print('Getting random tweet')
             tweet = twttr_handler.decide_action('random-timeline')
         else:
-            tweet = tweet['tweetId']
             update_database = True
-
+            tweet = tweet['tweetId']
     try:
+
         if tweet == None:
             return
+        print(tweet)
         tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = tweet)
+        user_name = tweet_conversation[-1]['content'].split(':')[0]
+        print('User name: ', user_name)
+        if user_name.lower() == os.getenv("TWITTER_HANDLE").lower():
+            print('Tweet is by bot, ignoring: ', tweet)
+            raise Exception('Tweet is by bot, ignoring')
         if len(tweet_conversation) != 0 and tweet_conversation is not None:
             actions = decide_command.decide_command(tweet_conversation)
             actions_list = [action.strip() for action in re.search(r"\[(.*?)\]", actions).group(1).split(',')]
             if 'A' not in actions_list:
                 for action in actions_list:
                     perform_action(action, tweet_conversation, tweet_id=tweet)
+
+        doug_logging.create_log(tweet, tweet_conversation[-1]['content'], actions_list)
+
     except Exception as e:
         print(f'Error in respond_to_notification: {e}')
+        doug_logging.create_log(tweet, tweet_conversation[-1]['content'], Exception)
     finally:
+        # Create a log using the tweet id, tweet text of the last tweet in the conversation and the actions
         if update_database:
             update_actioned(tweet)
-        time.sleep(20) 
 
 def testing():
     # tweet_conversation = twttr_handler.decide_action('conversation', tweet_id = "1664497913299632128")

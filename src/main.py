@@ -18,7 +18,6 @@ lock = threading.Lock()
 def search_tweets():
     with lock:
         try:
-            print('Searching for tweets', flush=True)
             twttr_search_tweets.get_notifications()
         except Exception as e:
             print('Error in search_tweets: '    + str(e), flush=True)
@@ -26,8 +25,8 @@ def search_tweets():
 def respond_to_notification():
     with lock:
         try:
-            print('Responding to notifications', flush=True)
             responding.respond_to_notification()
+            print('Responded to notification', flush=True)
         except Exception as e:
             print('Error in respond_to_notification: '    + str(e), flush=True)
 
@@ -36,9 +35,6 @@ def main():
     load_dotenv()
     notif_search_time =  int(os.getenv('NOTIFICATION_SEARCH_TIME'))
     respond_time = int(os.getenv('RESPOND_TIME'))
-    post_time = int(os.getenv('POST_TIME'))
-    print(notif_search_time, respond_time, post_time, flush=True)
-    print('Starting initial search, response, and post', flush=True)
     search_tweets()
     respond_to_notification()
     schedule.every(notif_search_time).minutes.do(search_tweets)

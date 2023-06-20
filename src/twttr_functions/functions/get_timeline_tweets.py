@@ -1,6 +1,7 @@
 import http.client
 import json
 import random
+import os
 
 
 
@@ -19,7 +20,6 @@ def get_tweet(key, session):
         res = conn.getresponse()
         data = res.read()
         json_data = json.loads(data)
-        
         json_data = json_data['data']['timeline_response']['timeline']['instructions'][0]['entries']
         #  Filter out any entries that dont have a content section
         json_data = [i for i in json_data if 'content' in i]
@@ -29,7 +29,19 @@ def get_tweet(key, session):
         json_data = [i for i in json_data if 'component' in i['content']['clientEventInfo']]
         # Filter out any entries that dont have a suggested_ranked_organic_tweet section in the component section of the clientEventInfo section of the content section
         json_data = [i for i in json_data if 'suggest_ranked_organic_tweet' in i['content']['clientEventInfo']['component']]
+        # Filter out entries that have a user_id of os.getenv('TWITTER_USER_ID') in ['content']['content']['tweetResult']['result']['user_id_str']
+        TWITTER_USER_ID = os.getenv('TWITTER_USER_ID')
 
+        json_data = [
+            i for i in json_data 
+            if 'content' in i 
+            and 'content' in i['content']
+            and 'tweetResult' in i['content']['content']
+            and 'result' in i['content']['content']['tweetResult']
+            and 'legacy' in i['content']['content']['tweetResult']['result']
+            and i['content']['content']['tweetResult']['result']['legacy']['user_id_str'] != TWITTER_USER_ID
+        ]       
+        
         # Pick random tweet
         json_data = random.choice(json_data)
 
@@ -40,3 +52,8 @@ def get_tweet(key, session):
         print('Error encountered while getting a tweet from the timeline. Retrying...  '+ str(e), flush=True)
 
 
+if __name__ == "__main__":
+    key = os.getenv('RAPID_API_KEY')
+    session = os.getenv('SESSION')
+    tweet_id = get_tweet(key, session)
+    print(tweet_id)

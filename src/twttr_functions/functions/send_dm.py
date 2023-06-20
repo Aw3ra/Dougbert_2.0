@@ -7,7 +7,7 @@ def send_dm(message, session, key, to_user_name=None, to_user_id=None, media_id=
     # Create a new tip link
     tip_link = send_tip_link()
     # Send the tip link to the user
-    message = message + tip_link
+    message = message +'\n'+ tip_link
     url = "https://twttrapi.p.rapidapi.com/send-dm"
 
     payload = {
